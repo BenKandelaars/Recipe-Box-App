@@ -1,0 +1,24 @@
+{
+  "name": "recipebox_app",
+  "version": "1.0.0",
+  "description": "FreeCodeCamp project. Part of the Data Visualisation Certificate - React projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BenKandelaars/Recipe-Box-App.git"
+  },
+  "keywords": [
+    "freecodecamp",
+    "recipebox",
+    "react"
+  ],
+  "author": "Ben Kandelaars",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BenKandelaars/Recipe-Box-App/issues"
+  },
+  "homepage": "https://github.com/BenKandelaars/Recipe-Box-App#readme"
+}
