@@ -1,40 +1,10 @@
-/*
-let recipeStore = [
-    {
-      "id": 1,
-      "name": "Lasagne",
-      "book": "Delia p.25",
-      "ingredients": [
-        "Pasta sheets", "Pasta Sauce", "Parmesan Cheese"]
-    },
-    {
-      "id": 2,
-      "name": "Lasagne",
-      "book": "Delia p.25",
-      "ingredients": [
-        "Pasta sheets", "Parmesan Cheese"]
-    },
-    {
-      "id": 3,
-      "name": "Lasagne",
-      "book": "Delia p.25",
-      "ingredients": [
-        "Pasta sheets", "Pasta Sauce", "Parmesan Cheese", "Parmesan Cheese"]
-    }
-]
-*/
 
-function IngredientList ({ingredients}){
 
-  const ingredientItems = ingredients.map((ingredient, index) => <li key={index}>{ingredient}</li>)
-
+function RecipeName ({name}){
   return (
-    <article className="recipe_ingredientList">
-      <h6>Ingrediants:</h6>
-      <ul>
-        {ingredientItems}
-      </ul>
-    </article>
+    <div className="recipe_label">
+      <p>{name}</p>
+    </div>
   )
 }
 
@@ -51,6 +21,20 @@ function RecipeBook ({book}){
   )
 }
 
+function IngredientList ({ingredients}){
+
+  const ingredientItems = ingredients.map((ingredient, index) => <li key={index}>{ingredient}</li>)
+
+  return (
+    <article className="recipe_ingredientList">
+      <h6>Ingrediants:</h6>
+      <ul>
+        {ingredientItems}
+      </ul>
+    </article>
+  )
+}
+
 function RecipeTray (props){
   return (
     <article className="recipe_tray">
@@ -59,13 +43,6 @@ function RecipeTray (props){
     </article>)
 }
 
-function RecipeName ({name}){
-  return (
-    <div className="recipe_label">
-      <p>{name}</p>
-    </div>
-  )
-}
 
 class RecipeBox extends React.Component {
   constructor (props){
@@ -74,13 +51,12 @@ class RecipeBox extends React.Component {
   }
 
   handleClick(){
-    this.props.openOnClick()
+    this.props.openOnClick(this.props.recipe)
   }
 
   render(){
     const style = {
       width: `300px`,
-      height: this.props.isOpen ? this.props.height : '2.5rem',
       margin: `5px 10px 0px 10px`,
       overflow: 'hidden',
 
@@ -91,13 +67,27 @@ class RecipeBox extends React.Component {
       transition: `height 0.2s ease-out`,
     }
 
+    let height = {
+      height: this.props.height === 'auto' ? 'auto' : this.props.recipe.isOpen ? this.props.height : '2.5rem',
+    }
+
+    let styleRecipeBox = Object.assign({}, style, height)
+
+    const styleRecipeDetail = {
+      height: 'auto',
+      padding: '5px 5px 5px 5px',
+
+      fontFamily: "'Quicksand', sans-serif",
+      fontSize: '1rem',
+    }
+
     const {name, book, ingredients} = this.props.recipe
 
     return (
-      <div style={style} onClick={this.handleClick}>
+      <div style={styleRecipeBox} onClick={this.handleClick}>
         <section>
           <RecipeName name={name} />
-          <article className="recipe_detail">
+          <article style={styleRecipeDetail}>
             <RecipeBook book={book} />
             <IngredientList ingredients = {ingredients} />
             <RecipeTray />
@@ -112,23 +102,13 @@ class RecipeBoxContainer extends React.Component {
   constructor (props){
     super(props)
     this.state = {
-      isOpen: true,
       height: 'auto'
     }
-
-    this.openOnClick = this.openOnClick.bind(this)
   }
 
   componentDidMount(){
     this.setState({
       height: window.getComputedStyle(ReactDOM.findDOMNode(this.instance)).getPropertyValue("height"),
-      isOpen: false
-    })
-  }
-
-  openOnClick (){
-    this.setState({
-      isOpen: !this.state.isOpen
     })
   }
 
@@ -138,12 +118,10 @@ class RecipeBoxContainer extends React.Component {
         <RecipeBox
           ref = {(instance) => this.instance = instance}
 
-          isOpen = {this.state.isOpen}
           height = {this.state.height}
-          openOnClick = {this.openOnClick}
+          openOnClick = {this.props.openOnClick}
 
-          recipe = {this.props.recipe}
-          />
+          recipe = {this.props.recipe} />
       </div>
     )
   }
@@ -153,15 +131,58 @@ class RecipeIndex extends React.Component {
   constructor (props){
     super(props)
     this.state = {
-      currentOpen: ""
+      recipeStore,
+      currentOpen: false
+    },
+
+    this.openOnClick = this.openOnClick.bind(this)
+  }
+
+  openOnClick (clickedRecipe){
+    setTimeout(() => console.log("Recipe changed: ", clickedRecipe), 500)
+
+    let currentOpen = this.state.currentOpen
+    let nextOpen
+    let updatedRecipeStore = []
+
+    if (clickedRecipe.id === currentOpen) {
+      updatedRecipeStore = this.state.recipeStore.map((recipe) => {
+        if (recipe.id === currentOpen) {
+          recipe.isOpen = false
+          nextOpen = false
+        }
+
+        return recipe
+      }
+    )} else {
+      updatedRecipeStore = this.state.recipeStore.map((recipe) => {
+
+        if (recipe.id === clickedRecipe.id) {
+          recipe.isOpen = true
+          nextOpen = recipe.id
+        }
+
+        if (recipe.id === currentOpen) {
+          recipe.isOpen = false
+        }
+
+        return recipe
+      })
     }
+
+    this.setState({
+      recipeStore: updatedRecipeStore,
+      currentOpen: nextOpen
+    })
   }
 
   render(){
+
     const recipeItems = recipeStore.map((recipe, index) =>
       <RecipeBoxContainer
         key = {recipe.id}
-        recipe = {recipe}/>
+        recipe = {recipe}
+        openOnClick = {this.openOnClick} />
     )
 
     return (
@@ -171,7 +192,6 @@ class RecipeIndex extends React.Component {
     )
   }
 }
-
 
 class App extends React.Component {
   constructor (props){
