@@ -18,11 +18,15 @@ button:focus {
 
   display: flex;
   align-items: center;
+}
 
+.recipe_label--text {
   font-family: Verdana;
   font-size: 1rem;
   overflow: hidden;
   white-space: nowrap;
+  background-color: cornflowerblue;
+  border: none;
 }
 
 .recipe_ingredientList > h6 {
@@ -38,29 +42,26 @@ button:focus {
 
 .recipe_tray {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .recipe_btn {
-  border: 0px solid white;
+  border: 1px solid white;
   height: 2rem;
   width: 60px;
   border-radius: 5px;
   margin: 2px;
+
   font-family: 'Quicksand', sans-serif;
+  color: 	#ff99aa;
+
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.btn_primary {
-  border-color: green;
-  color: 	#ff99aa;
-}
-
-.btn_alert {
-  border-color: red;
-  color: 	#ff99aa;
+.recipe_btn:active {
+  border-color: black;
 }
 
 .recipe_box:hover {

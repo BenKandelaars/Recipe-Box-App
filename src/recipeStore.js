@@ -2,6 +2,7 @@ let recipeStore = [
     {
       "id": 1,
       "isOpen": false,
+      "presentationView": true,
       "name": "Lasagne",
       "book": "Delia p.25",
       "ingredients": [
@@ -10,7 +11,8 @@ let recipeStore = [
     {
       "id": 2,
       "isOpen": false,
-      "name": "Lasagne",
+      "presentationView": true,
+      "name": "Beef Stew",
       "book": "Delia p.25",
       "ingredients": [
         "Pasta sheets", "Parmesan Cheese"]
@@ -18,25 +20,10 @@ let recipeStore = [
     {
       "id": 3,
       "isOpen": false,
-      "name": "Lasagne",
+      "presentationView": true,
+      "name": "Lamb Hock",
       "book": "Delia p.25",
       "ingredients": [
         "Pasta sheets", "Pasta Sauce", "Parmesan Cheese", "Parmesan Cheese", "Parmesan Cheese", "Parmesan Cheese"]
-    },
-    {
-      "id": 4,
-      "isOpen": false,
-      "name": "Lasagne",
-      "book": "Delia p.25",
-      "ingredients": [
-        "Pasta sheets", "Parmesan Cheese"]
-    },
-    {
-      "id": 5,
-      "isOpen": false,
-      "name": "Lasagne",
-      "book": "Delia p.25",
-      "ingredients": [
-        "Pasta sheets", "Parmesan Cheese"]
     },
 ]
