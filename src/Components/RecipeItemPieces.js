@@ -8,7 +8,11 @@ function RecipeName ({name}){
 }
 
 function RecipeNameEdit ({recipeID, value, editRecipeName}){
-  const style = {textDecoration: 'underline'}
+  const style = {
+    //textDecoration: 'underline',
+    border: 'none',
+    borderBottom: '0.5px solid grey'
+  }
 
   return (
     <div className="recipe_label">
@@ -35,7 +39,13 @@ function RecipeBook ({book}){
 function RecipeBookEdit ({book, recipeID, editBookName}){
   const styleComponent = {margin: '10px auto'}
   const styleHeader = {display: 'inline', fontWeight: 'normal'}
-  const styleBook = {textDecoration: 'underline', fontSize: 'inherit', border: 'none', padding: '0px'}
+  const styleBook = {
+  //  textDecoration: 'underline',
+    fontSize: 'inherit',
+    border: 'none',
+    borderBottom: '0.5px solid grey',
+    padding: '0px',
+  }
 
   return (
     <article style={styleComponent}>
@@ -62,17 +72,61 @@ function IngredientList ({ingredients}){
   )
 }
 
-function RecipeTray ({editRecipe, deleteRecipe, recipeID}){
+function IngredientListEdit ({ingredients, updateIngredientList, ingredientsHeight, recipeID}){
+
+  const ingredientItems = ingredients.join(", ")
+  console.log(ingredientsHeight)
+
+  const style={
+    width: '90%',
+    height: ingredientsHeight,
+    fontFamily: "'Quicksand', sans-serif",
+    fontSize: '1rem',
+    minHeight: '4rem'
+  }
+
   return (
-    <article className="recipe_tray">
+    <article className="recipe_ingredientList">
+      <h6>Ingrediants:</h6>
+      <div style={{display: 'flex', justifyContent: 'center'}}>
+        <textarea className="" type="text"
+          style={style}
+          defaultValue={ingredientItems}
+          onChange={(e) => updateIngredientList(e, recipeID)}>
+        </textarea>
+      </div>
+    </article>
+  )
+}
+
+function RecipeTray ({editRecipe, deleteRecipe, recipeID}){
+  const style={
+    marginTop: 'auto',
+    padding: '5px',
+  }
+
+  return (
+    <article className="recipe_tray" style={style}>
       <button className="recipe_btn" onClick={(e) => editRecipe(e, recipeID)}>Edit</button>
       <button className="recipe_btn" onClick={(e) => deleteRecipe(e, recipeID)}>Delete</button>
     </article>)
 }
 
-function RecipeTrayEdit ({saveRecipe, recipeID}){
+function RecipeTrayEdit ({saveRecipe, resetHeight, recipeID}){
+  const style={
+    marginTop: 'auto',
+    padding: '5px',
+    display: 'flex',
+    justifyContent: 'center'
+  }
+
+  function handleClick (){
+    saveRecipe(recipeID)
+    resetHeight()
+  }
+
   return (
-    <article className="recipe_tray">
-      <button className="recipe_btn" onClick={() => saveRecipe(recipeID)}>Save</button>
+    <article className="recipe_tray" style={style}>
+      <button className="recipe_btn" onClick={handleClick}>Save</button>
     </article>)
 }

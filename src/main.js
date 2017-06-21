@@ -1,21 +1,68 @@
+
+
+function NavMenu ({createRecipe, resetDefaults}){
+  return (
+    <nav className="navStyle">
+      <button className="navBtn_Style">Save</button>
+      <button className="navBtn_Style">Load</button>
+      <button className="navBtn_Style" onClick={() => resetDefaults()}>Reset</button>
+      <button className="navBtn_Style createBtn" onClick={() => createRecipe()}>Create</button>
+    </nav>
+  )
+}
+
+
 class RecipeItemContainer extends React.Component {
   constructor (props){
     super(props)
     this.state = {
-      height: 'auto',
+      height: (this.props.recipe.isNew) ? '14rem' : 'auto',
+      ingredientsHeight: 0
+    }
+
+    this.resetHeight = this.resetHeight.bind(this)
+  }
+
+
+
+  componentDidMount(){
+    let ingredientsNo = this.props.recipe.ingredients.length
+
+    if (ingredientsNo > 3){
+
+      this.setState({
+        height: window.getComputedStyle(ReactDOM.findDOMNode(this.instance)).getPropertyValue("height"),
+        ingredientsHeight: `${(ingredientsNo) + 1}rem`
+      })
+    } else {
+      this.setState({
+        ingredientsHeight: `4rem`
+      })
     }
   }
 
-  componentDidMount(){
+  resetHeight(){
     this.setState({
-      height: window.getComputedStyle(ReactDOM.findDOMNode(this.instance)).getPropertyValue("height"),
+      height: 'auto'
     })
   }
 
+  componentDidUpdate(){
+    if (this.state.height === 'auto'){
+      const ingredientsNo = this.props.recipe.ingredients.length
+
+      this.setState({
+        height: window.getComputedStyle(ReactDOM.findDOMNode(this.instance)).getPropertyValue("height"),
+        ingredientsHeight: `${(ingredientsNo) + 1}rem`
+      })
+    }
+  }
+
   render() {
+
     const style = {
-      width: `300px`,
-      margin: `5px 10px 0px 10px`,
+      width: `100%`,
+      margin: `5px auto`,
       overflow: 'hidden',
 
       border: `1px solid cornflowerblue`,
@@ -37,6 +84,8 @@ class RecipeItemContainer extends React.Component {
             editRecipe = {this.props.editRecipe}
 
             recipe = {this.props.recipe}
+
+          //  updateHeight = {this.updateHeight}
           />
         )
     } else {
@@ -51,9 +100,14 @@ class RecipeItemContainer extends React.Component {
             saveRecipe = {this.props.saveRecipe}
 
             recipe = {this.props.recipe}
+            ingredientsHeight = {this.state.ingredientsHeight}
 
             editRecipeName={this.props.editRecipeName}
             editBookName={this.props.editBookName}
+            updateIngredientList={this.props.updateIngredientList}
+
+            resetHeight = {this.resetHeight}
+          //  updateHeight = {this.updateHeight}
           />
         )
     }
@@ -72,16 +126,21 @@ class RecipeIndex extends React.Component {
   constructor (props){
     super(props)
     this.state = {
-      recipeStore,
+      recipeStore: defaultRecipes(),
       currentOpen: false,
     },
 
     this.openOnClick = this.openOnClick.bind(this)
     this.deleteRecipe = this.deleteRecipe.bind(this)
     this.editRecipe = this.editRecipe.bind(this)
+
     this.editRecipeName = this.editRecipeName.bind(this)
     this.editBookName = this.editBookName.bind(this)
+    this.updateIngredientList = this.updateIngredientList.bind(this)
     this.saveRecipe = this.saveRecipe.bind(this)
+
+    this.createRecipe = this.createRecipe.bind(this)
+    this.resetDefaults = this.resetDefaults.bind(this)
   }
 
   openOnClick (clickedRecipe){
@@ -153,14 +212,16 @@ class RecipeIndex extends React.Component {
 
   deleteRecipe (e, recipeID) {
     console.log("delete recipe no. ", recipeID)
-
     e.stopPropagation()
 
     const updatedRecipes = this.state.recipeStore.reduce(function (acc, recipe) {
       return recipe.id === recipeID ? acc : acc.concat(recipe)
     }, [])
 
-    this.setState({recipeStore: updatedRecipes})
+    this.setState({
+      recipeStore: updatedRecipes,
+      currentOpen: false
+    })
   }
 
   editRecipe (e, recipeID) {
@@ -175,8 +236,6 @@ class RecipeIndex extends React.Component {
     this.updateRecipeState(recipeID, (recipe) => {
       return {...recipe, name: e.target.value}
     })
-
-    console.log(this.state)
   }
 
   editBookName (e, recipeID){
@@ -185,9 +244,49 @@ class RecipeIndex extends React.Component {
     })
   }
 
+  updateIngredientList (e, recipeID){
+    const ingredients = e.target.value
+
+    this.updateRecipeState(recipeID, (recipe) => {
+      return {...recipe, ingredients: ingredients.split(",")}
+    })
+
+  }
+
   saveRecipe(recipeID){
     this.updateRecipeState(recipeID, (recipe) => {
       return {...recipe, presentationView: true}
+    })
+  }
+
+  createRecipe (){
+    const updatedRecipes = this.state.recipeStore.reduce(function (acc, recipe) {
+      return acc.concat({...recipe, isOpen: false, presentationView: true})
+    }, [])
+
+    const highestID = this.state.recipeStore.reduce(function (acc, recipe) {
+        return (recipe.id < acc) ? acc : recipe.id
+      }, 0)
+
+
+    this.setState({
+      currentOpen: highestID + 1,
+      recipeStore: updatedRecipes.concat({
+          "id": highestID + 1,
+          "isNew": true,
+          "isOpen": true,
+          "presentationView": false,
+          "name": "",
+          "book": "",
+          "ingredients": []
+        })
+    })
+  }
+
+  resetDefaults(){
+    this.setState({
+      recipeStore: defaultRecipes(),
+      currentOpen: false
     })
   }
 
@@ -201,12 +300,16 @@ class RecipeIndex extends React.Component {
         editRecipe = {this.editRecipe}
         editRecipeName = {this.editRecipeName}
         editBookName = {this.editBookName}
+        updateIngredientList = {this.updateIngredientList}
         saveRecipe = {this.saveRecipe}
       />
     )
 
     return (
       <div>
+        <NavMenu
+          resetDefaults={this.resetDefaults}
+          createRecipe={this.createRecipe} />
         {recipeItems}
       </div>
     )
@@ -218,12 +321,15 @@ class RecipeIndex extends React.Component {
 class App extends React.Component {
   constructor (props){
     super(props)
+
   }
 
   render(){
     return (
       <div>
-        <RecipeIndex />
+        <MainView>
+          <RecipeIndex />
+        </MainView>
       </div>
   )}
 }
