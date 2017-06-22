@@ -5,30 +5,30 @@ function defaultRecipes (){
         "isNew": false,
         "isOpen": false,
         "presentationView": true,
-        "name": "Lasagne",
-        "book": "Delia p.25",
+        "name": "Asparagus and Pea Risotto (v)",
+        "book": "Naked Chef p.176",
         "ingredients": [
-          "Pasta sheets", "Pasta Sauce", "Parmesan Cheese"]
+          "2 x bunch Asparagus", "340g Peas", "Fresh Mint"]
       },
       {
         "id": 2,
         "isNew": false,
         "isOpen": false,
         "presentationView": true,
-        "name": "Beef Stew",
-        "book": "Delia p.25",
+        "name": "Leek Fritters (v)",
+        "book": "Plenty p.36",
         "ingredients": [
-          "Pasta sheets", "Parmesan Cheese"]
+          "3 Leeks", "5 Shallots","1 Red Chilli", "Full bunch Parsley", "Full bunch Coriander", "Lemon", "Yoghurt", "Soured Cream"]
       },
       {
         "id": 3,
         "isNew": false,
         "isOpen": false,
         "presentationView": true,
-        "name": "Lamb Hock",
-        "book": "Delia p.25",
+        "name": "Pasta Genovese (v)",
+        "book": "Thyme after Thyme p.18",
         "ingredients": [
-          "Pasta sheets", "Pasta Sauce", "Parmesan Cheese", "Parmesan Cheese", "Parmesan Cheese", "Parmesan Cheese"]
+          "600g New Potatoes", "400g French Beans", "500g Trofie Pasta", "Parmessan", "250g Green Pesto"]
       }
   ]
 }

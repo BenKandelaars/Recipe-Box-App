@@ -75,7 +75,6 @@ function IngredientList ({ingredients}){
 function IngredientListEdit ({ingredients, updateIngredientList, ingredientsHeight, recipeID}){
 
   const ingredientItems = ingredients.join(", ")
-  console.log(ingredientsHeight)
 
   const style={
     width: '90%',

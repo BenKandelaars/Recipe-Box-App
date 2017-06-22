@@ -1,10 +1,21 @@
+function recipeStoreInit(){
+
+  const inStorage = localStorage.getItem('_username_recipes')
+
+  if (inStorage){
+    return JSON.parse(inStorage)
+  } else {
+    const recipes = defaultRecipes()
+    localStorage.setItem('_username_recipes', JSON.stringify(recipes))
+    return recipes
+  }
+}
+
 
 
 function NavMenu ({createRecipe, resetDefaults}){
   return (
     <nav className="navStyle">
-      <button className="navBtn_Style">Save</button>
-      <button className="navBtn_Style">Load</button>
       <button className="navBtn_Style" onClick={() => resetDefaults()}>Reset</button>
       <button className="navBtn_Style createBtn" onClick={() => createRecipe()}>Create</button>
     </nav>
@@ -126,7 +137,7 @@ class RecipeIndex extends React.Component {
   constructor (props){
     super(props)
     this.state = {
-      recipeStore: defaultRecipes(),
+      recipeStore: recipeStoreInit(),
       currentOpen: false,
     },
 
@@ -196,7 +207,7 @@ class RecipeIndex extends React.Component {
     })
   }
 
-  updateRecipeState (recipeID, actionFn){
+  updateRecipeState (recipeID, actionFn, updateLocalStorage){
     const updatedRecipes = this.state.recipeStore.reduce(function (acc, recipe) {
       if (recipe.id === recipeID) {
         return acc.concat(actionFn(recipe))
@@ -208,10 +219,13 @@ class RecipeIndex extends React.Component {
     this.setState({
       recipeStore: updatedRecipes
     })
+
+    if(updateLocalStorage){
+      localStorage.setItem('_username_recipes', JSON.stringify(updatedRecipes))
+    }
   }
 
   deleteRecipe (e, recipeID) {
-    console.log("delete recipe no. ", recipeID)
     e.stopPropagation()
 
     const updatedRecipes = this.state.recipeStore.reduce(function (acc, recipe) {
@@ -222,6 +236,9 @@ class RecipeIndex extends React.Component {
       recipeStore: updatedRecipes,
       currentOpen: false
     })
+
+    localStorage.setItem('_username_recipes', JSON.stringify(updatedRecipes))
+
   }
 
   editRecipe (e, recipeID) {
@@ -256,7 +273,7 @@ class RecipeIndex extends React.Component {
   saveRecipe(recipeID){
     this.updateRecipeState(recipeID, (recipe) => {
       return {...recipe, presentationView: true}
-    })
+    }, true)
   }
 
   createRecipe (){
@@ -288,6 +305,8 @@ class RecipeIndex extends React.Component {
       recipeStore: defaultRecipes(),
       currentOpen: false
     })
+
+    localStorage.setItem('_username_recipes', JSON.stringify(defaultRecipes()))
   }
 
   render(){

@@ -11,8 +11,6 @@ class MainView extends React.Component {
       color: 'olivedrab'
     }
 
-
-
     return (
       <div className='mainView'>
         <h1 style={headerStyle}>RecipeBox</h1>
