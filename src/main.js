@@ -1,6 +1,6 @@
-function recipeStoreInit(){
+function recipeStoreInit() {
 
-  const inStorage = localStorage.getItem('_username_recipes')
+  const inStorage = localStorage.getItem('_username_recipes');
 
   if (inStorage){
     return JSON.parse(inStorage)
