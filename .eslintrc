@@ -1,5 +1,5 @@
 {
-/*
+
   "parserOptions": {
     "ecmaVersion": 6
     },
@@ -17,5 +17,5 @@
       "react/jsx-uses-vars": "error",
       "prettier/prettier": "error"
     }
-    */
+
 }
